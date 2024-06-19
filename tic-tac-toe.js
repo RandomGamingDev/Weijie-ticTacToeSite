@@ -31,11 +31,11 @@ const Restart = _ => {
                 // Initialize cell
                 const elem = document.createElement("td");
                 {
-                    if (game_end != GameEnd.Null)
-                        return;
-
                     elem.id = `#td${i}`;
                     elem.onclick = _ => {
+			if (game_end != GameEnd.Null)
+			    return;
+
                         const turn_piece = turn % 2 == 0 ? 'X' : 'O';
 
                         // Render move
