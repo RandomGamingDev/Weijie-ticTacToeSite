@@ -1,112 +1,102 @@
-//setting up input table data variable
-const td1 = document.querySelector("#td1");
-const td2 = document.querySelector("#td2");
-const td3 = document.querySelector("#td3");
-const td4 = document.querySelector("#td4");
-const td5 = document.querySelector("#td5");
-const td6 = document.querySelector("#td6");
-const td7 = document.querySelector("#td7");
-const td8 = document.querySelector("#td8");
-const td9 = document.querySelector("#td9");
-//storing table value for behind-display logic
-//0 = no value, 1 = "x", 2 = "o"
-values = [[0,0,0],[0,0,0],[0,0,0]];
-//setting up game trackers
-let turn = 1;
-
-//checking 
-td1.onclick = function(){
-    changeValue(0, td1);
-};
-td2.onclick = function(){
-    changeValue(1, td2);
-};
-td3.onclick = function(){
-    changeValue(2, td3);
-};
-td4.onclick = function(){
-    changeValue(3, td4);
-};
-td5.onclick = function(){
-    changeValue(4, td5);
-};
-td6.onclick = function(){
-    changeValue(5, td6);
-};
-td7.onclick = function(){
-    changeValue(6, td7);
-};
-td8.onclick = function(){
-    changeValue(7, td8);
-};
-td9.onclick = function(){
-    changeValue(8, td9);
+const GameEnd = {
+    Null: 0,
+    Tie: 1,
+    Win: 2
 };
 
-function changeValue(order, td){
-    const choiceText = td.querySelector(".choice");
-    //turns table data to "o"
-    if(turn % 2 == 0){
-        choiceText.innerText = "o";
-        values[Math.floor(order / 3)][order % 3] = 2;
-        
-    }else{
-    //turns table data to "x"
-        choiceText.innerText = "x";
-        values[Math.floor(order / 3)][order % 3] = 1;
-        
-        
-    }
-    td.onclick = "";
-    turn++;
-    if(checkWin() == 1){
-        setTimeout(function(){alert("player 1 has won")},2);
-        
-    }else if(checkWin() == 2){
-        setTimeout(function(){alert("player 2 has won")},2);
-        
-    }
-    
+let turn;
+let game_end;
+let board;
+let board_elem;
+let cells;
+
+const Restart = _ => {
+    turn = 1;
+    game_end = GameEnd.Null;
+    board = 
+        new Array(9)
+            .fill(' ');
+
+    board_elem = document.getElementById("board");
+    board_elem.innerHTML = "";
+    // Getting each cell of grid
+    cells =
+        new Array(9)
+            .fill()
+            .map((v, i) => {
+                // Initialize row
+                if (i % 3 == 0)
+                    board_elem.append(document.createElement("tr"));
+
+                // Initialize cell
+                const elem = document.createElement("td");
+                {
+                    if (game_end != GameEnd.Null)
+                        return;
+
+                    elem.id = `#td${i}`;
+                    elem.onclick = _ => {
+                        const turn_piece = turn % 2 == 0 ? 'X' : 'O';
+
+                        // Render move
+                        const txt = document.createElement('p')
+                        {
+                            txt.className = "choice";
+                            txt.innerText = board[i] = turn_piece;
+                        }
+                        elem.appendChild(txt);
+
+                        // Display element
+                        elem.onclick = _ => {};
+                        turn++;
+
+                        // Check for win
+                        if ((() => {
+                            { // Check current row
+                                const row_start = 3 * Math.floor(i / 3);
+                                const row_end = row_start + 3;
+
+                                let j = row_start;
+                                for (;j < row_end && board[j] == turn_piece; j++);
+                                if (j >= row_end) return true;
+                            }
+
+                            { // Check current column
+                                const col_start = i % 3;
+                                const col_end = col_start + 6
+
+                                let j = col_start;
+                                for (;j <= col_end && board[j] == turn_piece; j += 3);
+                                if (j > col_end) return true;
+                            }
+
+                            if (i % 4 == 0) { // Check top left to bottom right diagnol
+                                let j = 0;
+                                for (; j < 9 && board[j] == turn_piece; j += 4);
+                                if (j >= 9) return true;
+                            }
+
+                            if ((i - 2) % 2 == 0) { // Check top right to bottom left diagnol
+                                let j = 2;
+                                for (; j < 7 && board[j] == turn_piece; j += 2);
+                                if (j >= 7) return true;
+                            }
+
+                            return false;
+                        })()) {
+                            game_end = GameEnd.Win;
+                            alert(`${turn_piece} won!`);
+                        }
+
+                        // Check for tie
+                        if (turn > 9) {
+                            game_end = GameEnd.Tie;
+                            alert("You've tied!");
+                            return;
+                        }
+                    }
+                }
+                board_elem.lastElementChild.appendChild(elem);
+            });
 }
-
-function checkWin(){
-    
-    //row check
-    for(let r = 0; r <3; r++){
-        const initialNum = values[r][0];
-        let fullMatch = true;
-        for(let c = 0; c < 3; c++){
-            if(initialNum !== values[r][c]){
-                fullMatch = false;
-                break;
-            }
-        }
-        if(fullMatch){
-            return(initialNum);
-        }
-            
-        
-    }
-    //column check
-    for(let c = 0; c <3; c++){
-        const initialNum = values[0][c];
-        let fullMatch = true;
-        for(let r = 0; r < 3; r++){
-            if(initialNum !== values[r][c]){
-                fullMatch = false;
-                break;
-            }
-        }
-        if(fullMatch){
-            return(initialNum);
-        }
-            
-        
-    }
-    //diagonal check
-    if((values[0][0] === values[1][1] && values[1][1] === values[2][2]) || (values[0][2] === values[1][1] && values[1][1] === values[2][0])){
-        return values[1][1];
-    }
-        
-    
-}
+Restart();

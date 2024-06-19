@@ -1,39 +1,51 @@
-
-html{
-    height:100vh;
-    margin:0;
-    padding:0;
+html {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
 }
-body{
-    height:100%;
-    margin:0;
-    padding:0;
-    background-color:rgb(97, 39, 109);
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(97, 39, 109);
 }
-table{
+#board {
     background-color: rgb(33, 20, 94);
-    padding:0;
-    width:300px;
-    height:300px;
-    margin:4% auto;
-    border-collapse:collapse;
-    border:2px solid #feac32;
-}
-td{
-    border:0.2px solid;
-    margin:0;
-    height:30%;
-    width:30%;
-    
-}
-
-.choice{
-    text-align: center;
-    color:white;
-    font-size:2rem;
-}
-
-.restart-form button{
+    padding: 0px;
+    max-width: 300px;
+    max-height: 300px;
+    min-width: 300px;
+    min-height: 300px;
+    width: 100%;
+    height: 100%;
     margin: 4% auto;
-    display:block;
+    overflow: hidden;
+    border-collapse: collapse;
+    border: 2px solid #feac32;
+    table-layout: fixed;
+}
+tr {
+    height: 100px;
+}
+td {
+    border: 0.2px solid;
+    margin: 0;
+    padding: 0px;
+    width: 100px;
+    height: 100px;
+    box-sizing: border-box;
+}
+tr, td {
+    padding: 0px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.choice {
+    text-align: center;
+    color: white;
+    font-size: 2rem;
+    line-height: 30px;
+    overflow: hidden;
+    white-space: nowrap;
 }
