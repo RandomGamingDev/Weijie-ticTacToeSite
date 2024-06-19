@@ -97,6 +97,7 @@ const Restart = _ => {
                     }
                 }
                 board_elem.lastElementChild.appendChild(elem);
+		return board_elem;
             });
 }
 Restart();
